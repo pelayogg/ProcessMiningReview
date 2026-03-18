@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Process Mining — Checkout · Stock · Delivery (QPR)</title>
 
-  <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -18,30 +17,32 @@
       --bg: #000;
       --fg: #fff;
       --muted: rgba(255,255,255,0.55);
-      --faint: rgba(255,255,255,0.35);
+      --faint: rgba(255,255,255,0.28);
       --blue:   #007AFF;
       --purple: #AF52DE;
       --green:  #34C759;
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
+    html { scroll-behavior: auto; } /* GSAP maneja el scroll */
     body {
       font-family: "Inter", -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
       background: var(--bg);
       color: var(--fg);
       -webkit-font-smoothing: antialiased;
       line-height: 1.5;
+      overflow-x: hidden;
     }
 
-    /* ─── HEADER ─── */
+    /* ════════════════════════════
+       HEADER
+    ════════════════════════════ */
     header {
-      position: sticky; top: 0; z-index: 60;
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
       height: var(--header-h);
-      display: flex; align-items: center;
-      padding: 0 24px;
-      background: rgba(0,0,0,0.8);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
+      display: flex; align-items: center; padding: 0 24px;
+      background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
       border-bottom: 1px solid rgba(255,255,255,0.06);
     }
     .hdr-inner {
@@ -56,21 +57,24 @@
       width: 32px; height: 32px; border-radius: 8px;
       background: linear-gradient(135deg, #1a1a1a, #444);
       display: flex; align-items: center; justify-content: center;
-      font-size: 11px; font-weight: 700; color: #fff;
+      font-size: 11px; font-weight: 700;
     }
     nav { display: flex; gap: 20px; }
     nav a {
       font-size: 14px; color: var(--muted);
-      text-decoration: none; transition: color .15s;
+      text-decoration: none; transition: color .15s; cursor: pointer;
     }
     nav a:hover { color: var(--fg); }
 
-    /* ─── HERO ─── */
+    /* ════════════════════════════
+       HERO
+    ════════════════════════════ */
     #hero {
-      min-height: calc(100vh - var(--header-h));
+      min-height: 100vh;
+      padding-top: var(--header-h);
       display: flex; flex-direction: column;
       align-items: center; justify-content: center;
-      padding: 80px 24px;
+      padding-left: 24px; padding-right: 24px;
       text-align: center;
     }
     .hero-eyebrow {
@@ -83,39 +87,33 @@
     }
     .hero-eyebrow i {
       width: 6px; height: 6px; border-radius: 50%;
-      background: var(--green); flex-shrink: 0;
-      font-style: normal; display: block;
+      background: var(--green); flex-shrink: 0; font-style: normal; display: block;
+      animation: pulse-dot 2s ease-in-out infinite;
+    }
+    @keyframes pulse-dot {
+      0%,100% { opacity: 1; } 50% { opacity: .4; }
     }
     .hero-title {
       font-size: clamp(42px, 7vw, 88px);
-      font-weight: 700;
-      line-height: 1.03;
-      letter-spacing: -0.03em;
-      max-width: 900px;
+      font-weight: 700; line-height: 1.03;
+      letter-spacing: -0.03em; max-width: 900px;
     }
     .hero-title span { color: var(--muted); font-weight: 300; }
     .hero-sub {
       margin-top: 24px;
-      font-size: clamp(15px, 1.8vw, 19px);
-      font-weight: 300;
-      color: var(--muted);
-      letter-spacing: -0.01em;
-      line-height: 1.65;
-      max-width: 680px;
+      font-size: clamp(15px, 1.8vw, 19px); font-weight: 300;
+      color: var(--muted); letter-spacing: -0.01em;
+      line-height: 1.65; max-width: 680px;
     }
     .hero-tags {
-      margin-top: 36px;
-      display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;
+      margin-top: 36px; display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;
     }
     .hero-tag {
-      padding: 5px 14px; border-radius: 100px;
-      font-size: 12px; font-weight: 500;
-      border: 1px solid rgba(255,255,255,0.1);
-      color: var(--muted);
+      padding: 5px 14px; border-radius: 100px; font-size: 12px; font-weight: 500;
+      border: 1px solid rgba(255,255,255,0.1); color: var(--muted);
     }
     .scroll-hint {
-      margin-top: 56px;
-      display: flex; flex-direction: column; align-items: center; gap: 8px;
+      margin-top: 56px; display: flex; flex-direction: column; align-items: center; gap: 8px;
       color: var(--faint); font-size: 11px; letter-spacing: .06em; text-transform: uppercase;
     }
     .scroll-arrow {
@@ -123,76 +121,266 @@
       background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.25));
       animation: scrollpulse 1.8s ease-in-out infinite;
     }
-    @keyframes scrollpulse {
-      0%,100% { opacity: .3; } 50% { opacity: 1; }
-    }
+    @keyframes scrollpulse { 0%,100% { opacity: .3; } 50% { opacity: 1; } }
 
-    /* ─── DIANA SECTION ─── */
-    #diana-section {
-      padding: 0 24px;
-    }
+    /* ════════════════════════════
+       DIANA
+    ════════════════════════════ */
+    #diana-section { padding: 0 24px; }
     .diana-layout {
       max-width: 1100px; margin: 0 auto;
-      display: grid;
-      grid-template-columns: 480px 1fr;
-      gap: 48px;
-      align-items: center;
-      padding: 80px 0;
+      display: grid; grid-template-columns: 480px 1fr;
+      gap: 48px; align-items: center; padding: 80px 0;
     }
-
-    /* SVG container */
-    .diana-svg-wrap {
-      display: flex; align-items: center; justify-content: center;
-    }
-
-    /* ─── RIGHT PANEL ─── */
-    .diana-panel {
-      display: flex; flex-direction: column; gap: 16px;
-    }
+    .diana-svg-wrap { display: flex; align-items: center; justify-content: center; }
+    .diana-panel { display: flex; flex-direction: column; gap: 16px; }
     .diana-panel-header {
-      font-size: 13px; font-weight: 500;
-      letter-spacing: .08em; text-transform: uppercase;
-      color: var(--faint); margin-bottom: 4px;
+      font-size: 13px; font-weight: 500; letter-spacing: .08em;
+      text-transform: uppercase; color: var(--faint); margin-bottom: 4px;
     }
-
-    /* Cada tarjeta de fase */
     .phase-card {
-      border-radius: 12px;
-      border: 1px solid rgba(255,255,255,0.07);
-      padding: 18px 20px;
-      transition: border-color .3s, background .3s, opacity .3s;
+      border-radius: 12px; border: 1px solid rgba(255,255,255,0.07);
+      padding: 18px 20px; transition: border-color .3s, background .3s, opacity .3s;
       opacity: .28;
     }
-    .phase-card.active {
-      opacity: 1;
-      background: rgba(255,255,255,0.04);
-    }
-    .phase-card.active.blue   { border-color: rgba(0,122,255,.35);   background: rgba(0,122,255,.05); }
-    .phase-card.active.purple { border-color: rgba(175,82,222,.35);  background: rgba(175,82,222,.05); }
-    .phase-card.active.green  { border-color: rgba(52,199,89,.35);   background: rgba(52,199,89,.05); }
+    .phase-card.active { opacity: 1; background: rgba(255,255,255,0.04); }
+    .phase-card.active.blue   { border-color: rgba(0,122,255,.35);  background: rgba(0,122,255,.05); }
+    .phase-card.active.purple { border-color: rgba(175,82,222,.35); background: rgba(175,82,222,.05); }
+    .phase-card.active.green  { border-color: rgba(52,199,89,.35);  background: rgba(52,199,89,.05); }
+    .phase-card-top { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+    .phase-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .phase-name { font-size: 15px; font-weight: 600; letter-spacing: -.01em; }
+    .phase-zone { font-size: 11px; color: var(--faint); margin-left: auto; letter-spacing: .04em; text-transform: uppercase; }
+    .phase-desc { font-size: 13px; color: var(--muted); line-height: 1.6; }
 
-    .phase-card-top {
-      display: flex; align-items: center; gap: 10px; margin-bottom: 8px;
+    /* ════════════════════════════
+       PRESENTATION — scroll-driven slides
+    ════════════════════════════ */
+
+    /* Spacer que da altura para el scroll */
+    #presentation-spacer {
+      /* 6 secciones × ~120vh cada una */
+      height: 720vh;
+      position: relative;
     }
-    .phase-dot {
-      width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+
+    /* Wrapper fijo que pega la presentación a la pantalla */
+    #presentation-fixed {
+      position: sticky;
+      top: var(--header-h);
+      height: calc(100vh - var(--header-h));
+      overflow: hidden;
+      display: flex;
+      align-items: stretch;
     }
-    .phase-name {
-      font-size: 15px; font-weight: 600; letter-spacing: -.01em;
+
+    /* Barra lateral de progreso */
+    .pres-sidebar {
+      width: 72px;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+      padding: 24px 0;
+      border-right: 1px solid rgba(255,255,255,0.05);
     }
-    .phase-zone {
-      font-size: 11px; color: var(--faint); margin-left: auto;
-      letter-spacing: .04em; text-transform: uppercase;
+    .pres-step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+      cursor: pointer;
     }
-    .phase-desc {
+    .pres-step-num {
+      width: 32px; height: 32px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 600; letter-spacing: .04em;
+      border: 1px solid rgba(255,255,255,0.1);
+      color: var(--faint);
+      transition: border-color .3s, color .3s, background .3s;
+    }
+    .pres-step.active .pres-step-num {
+      border-color: rgba(255,255,255,0.5);
+      color: var(--fg);
+      background: rgba(255,255,255,0.06);
+    }
+    .pres-step-line {
+      width: 1px; height: 20px;
+      background: rgba(255,255,255,0.07);
+    }
+    .pres-step:last-child .pres-step-line { display: none; }
+
+    /* Área de contenido */
+    .pres-content {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Cada slide */
+    .pres-slide {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 48px 64px;
+      opacity: 0;
+      transform: translateY(40px);
+      pointer-events: none;
+      will-change: transform, opacity;
+    }
+    .pres-slide.visible {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    /* Cabecera del slide */
+    .slide-header {
+      display: flex; align-items: baseline; gap: 20px;
+      margin-bottom: 36px;
+    }
+    .slide-num {
+      font-size: 64px; font-weight: 700;
+      letter-spacing: -0.04em; line-height: 1;
+      color: rgba(255,255,255,0.06);
+      flex-shrink: 0;
+      font-variant-numeric: tabular-nums;
+      user-select: none;
+    }
+    .slide-title {
+      font-size: clamp(22px, 2.8vw, 36px);
+      font-weight: 600; letter-spacing: -.025em;
+      line-height: 1.15;
+    }
+
+    /* Items de lista — aparecen uno a uno */
+    .slide-items {
+      display: flex; flex-direction: column; gap: 0;
+    }
+    .slide-item {
+      display: flex; gap: 16px; align-items: flex-start;
+      padding: 16px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      opacity: 0;
+      transform: translateX(-12px);
+      transition: none; /* GSAP lo maneja */
+      will-change: opacity, transform;
+    }
+    .slide-item:last-child { border-bottom: none; }
+    .slide-item.revealed {
+      opacity: 1 !important;
+      transform: translateX(0) !important;
+    }
+    .item-icon {
+      width: 28px; height: 28px; border-radius: 8px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; margin-top: 1px;
+      font-size: 12px;
+    }
+    .item-body { flex: 1; }
+    .item-title {
+      font-size: 15px; font-weight: 600;
+      letter-spacing: -.01em; margin-bottom: 3px;
+    }
+    .item-desc {
       font-size: 13px; color: var(--muted); line-height: 1.6;
     }
+    .item-desc code {
+      font-size: 11.5px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.08);
+      padding: 1px 5px; border-radius: 4px;
+      font-family: "SF Mono","Fira Code",monospace;
+      color: rgba(255,255,255,0.7);
+    }
 
-    /* ─── OTRAS SECCIONES ─── */
+    /* Speaker note dentro del slide */
+    .slide-note {
+      margin-top: 24px;
+      padding: 12px 16px;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.02);
+      border-left: 2px solid rgba(255,255,255,0.08);
+      font-size: 12px; color: rgba(255,255,255,0.32);
+      line-height: 1.65;
+      opacity: 0;
+      transition: none;
+    }
+    .slide-note.revealed { opacity: 1 !important; }
+    .note-label {
+      display: block; font-size: 9px; font-weight: 700;
+      letter-spacing: .1em; text-transform: uppercase;
+      color: rgba(255,255,255,0.2); margin-bottom: 5px;
+    }
+
+    /* Progress bar inferior */
+    .pres-progress {
+      position: absolute;
+      bottom: 0; left: 0;
+      height: 2px;
+      background: rgba(255,255,255,0.08);
+      width: 100%;
+    }
+    .pres-progress-fill {
+      height: 100%;
+      background: linear-gradient(to right, var(--blue), var(--purple), var(--green));
+      width: 0%;
+      transition: width .1s linear;
+    }
+
+    /* Slide especial: Acciones (grid 3 cols) */
+    .actions-slide-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 0;
+    }
+    .action-col {
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.07);
+      padding: 20px;
+      opacity: 0;
+      transform: translateY(16px);
+      will-change: opacity, transform;
+    }
+    .action-col.revealed { opacity: 1 !important; transform: translateY(0) !important; }
+    .action-col-label {
+      font-size: 10px; font-weight: 700;
+      letter-spacing: .1em; text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+    .action-col ul {
+      list-style: none; display: flex; flex-direction: column; gap: 10px;
+    }
+    .action-col ul li {
+      font-size: 13px; color: var(--muted); line-height: 1.6;
+      padding-left: 14px; position: relative;
+    }
+    .action-col ul li::before {
+      content: ''; position: absolute; left: 0; top: 8px;
+      width: 4px; height: 4px; border-radius: 50%;
+      background: rgba(255,255,255,0.2);
+    }
+    .action-col ul li code {
+      font-size: 11px; background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.08);
+      padding: 1px 5px; border-radius: 4px;
+      font-family: "SF Mono","Fira Code",monospace;
+      color: rgba(255,255,255,0.65);
+    }
+
+    /* ════════════════════════════
+       POST-PRESENTATION: metodología + footer
+    ════════════════════════════ */
     #metodologia {
-      padding: 64px 24px;
+      padding: 80px 24px;
       border-top: 1px solid rgba(255,255,255,0.05);
-      background: rgba(255,255,255,0.01);
     }
     #metodologia .inner { max-width: 1100px; margin: 0 auto; }
     #metodologia h2 { font-size: 20px; font-weight: 600; margin-bottom: 10px; }
@@ -202,16 +390,19 @@
       padding: 40px 24px;
       border-top: 1px solid rgba(255,255,255,0.05);
       text-align: center;
-      color: var(--faint);
-      font-size: 13px;
+      color: var(--faint); font-size: 13px;
     }
 
-    /* ─── RESPONSIVE ─── */
+    /* ════════════════════════════
+       RESPONSIVE
+    ════════════════════════════ */
     @media (max-width: 900px) {
-      .diana-layout {
-        grid-template-columns: 1fr;
-        justify-items: center;
-      }
+      .diana-layout { grid-template-columns: 1fr; justify-items: center; }
+      .pres-slide { padding: 32px 28px; }
+      .slide-num { font-size: 40px; }
+      .actions-slide-grid { grid-template-columns: 1fr; }
+      .pres-sidebar { width: 48px; }
+      .pres-step-num { width: 24px; height: 24px; font-size: 9px; }
     }
   </style>
 </head>
@@ -225,123 +416,358 @@
         Process Mining — QPR
       </div>
       <nav>
-        <a href="#hero">Resumen</a>
-        <a href="#diana-section">Enfoque</a>
-        <a href="#metodologia">Metodología</a>
+        <a onclick="scrollToSection('hero')">Resumen</a>
+        <a onclick="scrollToSection('diana-section')">Enfoque</a>
+        <a onclick="scrollToSection('presentation-spacer')">Contenido</a>
+        <a onclick="scrollToSection('acciones-slide')">Acciones</a>
       </nav>
     </div>
   </header>
 
-  <!-- ══════════════════════════════
+  <!-- ══════════════════════════════════════
        HERO
-  ══════════════════════════════ -->
+  ══════════════════════════════════════ -->
   <section id="hero">
-    <div class="hero-eyebrow">
-      <i></i>
-      QPR Process Mining · Jun–Ago 2025
-    </div>
-
+    <div class="hero-eyebrow"><i></i>QPR Process Mining · Jun–Ago 2025</div>
     <h1 class="hero-title">
       Procesos reales.<br>
       <span>Eventos, repeticiones</span><br>
       y decisiones.
     </h1>
-
     <p class="hero-sub">
       Análisis con QPR sobre Checkout ↔ Stock Distribution ↔ Delivery Plan.
       Cobertura España · Turquía · India.
     </p>
-
     <div class="hero-tags">
       <span class="hero-tag">3 países · 3 meses</span>
       <span class="hero-tag">Checkout</span>
       <span class="hero-tag">Stock Distribution</span>
       <span class="hero-tag">Delivery Plan</span>
     </div>
-
     <div class="scroll-hint">
       <div class="scroll-arrow"></div>
       Explorar
     </div>
   </section>
 
-  <!-- ══════════════════════════════
-       DIANA  +  PANEL DERECHO
-  ══════════════════════════════ -->
+  <!-- ══════════════════════════════════════
+       DIANA + PANEL
+  ══════════════════════════════════════ -->
   <section id="diana-section">
     <div class="diana-layout">
-
-      <!-- SVG diana — sin texto interno, solo anillos -->
       <div class="diana-svg-wrap">
-        <svg id="diana-svg" width="420" height="420" viewBox="0 0 420 420"
-             xmlns="http://www.w3.org/2000/svg" aria-label="Diana de enfoque evolutivo">
-
-          <!-- Anillos estáticos de fondo -->
+        <svg id="diana-svg" width="420" height="420" viewBox="0 0 420 420" xmlns="http://www.w3.org/2000/svg">
           <circle cx="210" cy="210" r="155" stroke="rgba(255,255,255,0.03)" stroke-width="1" fill="none"/>
           <circle cx="210" cy="210" r="120" stroke="rgba(255,255,255,0.07)" stroke-width="28" fill="none"/>
           <circle cx="210" cy="210" r="72"  stroke="rgba(255,255,255,0.07)" stroke-width="32" fill="none"/>
           <circle cx="210" cy="210" r="28"  stroke="rgba(255,255,255,0.10)" stroke-width="54" fill="none"/>
-
-          <!-- Anillos animados (accent) -->
           <circle id="acc-mig"  cx="210" cy="210" r="28"  stroke="#007AFF" stroke-width="4.5" fill="none" stroke-linecap="round" opacity="0"/>
           <circle id="acc-prod" cx="210" cy="210" r="72"  stroke="#AF52DE" stroke-width="4.5" fill="none" stroke-linecap="round" opacity="0"/>
           <circle id="acc-proc" cx="210" cy="210" r="120" stroke="#34C759" stroke-width="4.5" fill="none" stroke-linecap="round" opacity="0"/>
-
-          <!-- Punto central -->
           <circle cx="210" cy="210" r="3.5" fill="rgba(255,255,255,0.3)"/>
-
-          <!-- Etiqueta de fase activa (única línea, centro-inferior) -->
-          <text id="phase-label" x="210" y="382"
-            text-anchor="middle" font-size="11" font-weight="500"
-            fill="rgba(255,255,255,0.35)" font-family="Inter,sans-serif">
-          </text>
-
+          <text id="phase-label" x="210" y="382" text-anchor="middle" font-size="11" font-weight="500" fill="rgba(255,255,255,0.35)" font-family="Inter,sans-serif"></text>
         </svg>
       </div>
-
-      <!-- Panel derecho: tarjetas de fase -->
       <div class="diana-panel">
         <p class="diana-panel-header">Evolución del enfoque</p>
-
         <div class="phase-card blue" id="card-mig">
           <div class="phase-card-top">
             <div class="phase-dot" style="background:#007AFF"></div>
             <span class="phase-name">Migración / Delivery</span>
             <span class="phase-zone">Centro</span>
           </div>
-          <p class="phase-desc">
-            Estabilizar las integraciones y migraciones técnicas.
-            Punto de partida del análisis: fiabilidad del dato antes de cualquier optimización.
-          </p>
+          <p class="phase-desc">Estabilizar las integraciones y migraciones técnicas. Punto de partida: fiabilidad del dato antes de cualquier optimización.</p>
         </div>
-
         <div class="phase-card purple" id="card-prod">
           <div class="phase-card-top">
             <div class="phase-dot" style="background:#AF52DE"></div>
             <span class="phase-name">Producto · Capacidades</span>
             <span class="phase-zone">Anillo medio</span>
           </div>
-          <p class="phase-desc">
-            Qué necesitan realmente los clientes. Alinear las capacidades del producto
-            con las necesidades detectadas en los flujos de compra.
-          </p>
+          <p class="phase-desc">Qué necesitan realmente los clientes. Alinear las capacidades del producto con las necesidades detectadas en los flujos de compra.</p>
         </div>
-
         <div class="phase-card green" id="card-proc">
           <div class="phase-card-top">
             <div class="phase-dot" style="background:#34C759"></div>
             <span class="phase-name">Procesos / Flows</span>
             <span class="phase-zone">Exterior</span>
           </div>
-          <p class="phase-desc">
-            Cómo nos consumen. Objetivo final: visibilidad completa de los flujos
-            Checkout ↔ Stock ↔ Delivery y optimización continua.
-          </p>
+          <p class="phase-desc">Cómo nos consumen. Objetivo final: visibilidad completa Checkout ↔ Stock ↔ Delivery y optimización continua.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════
+       PRESENTATION — scroll-driven
+  ══════════════════════════════════════ -->
+  <div id="presentation-spacer">
+    <div id="presentation-fixed">
+
+      <!-- Sidebar numeración -->
+      <div class="pres-sidebar" id="pres-sidebar">
+        <div class="pres-step active" data-slide="0">
+          <div class="pres-step-num">01</div>
+          <div class="pres-step-line"></div>
+        </div>
+        <div class="pres-step" data-slide="1">
+          <div class="pres-step-num">02</div>
+          <div class="pres-step-line"></div>
+        </div>
+        <div class="pres-step" data-slide="2">
+          <div class="pres-step-num">03</div>
+          <div class="pres-step-line"></div>
+        </div>
+        <div class="pres-step" data-slide="3">
+          <div class="pres-step-num">04</div>
+          <div class="pres-step-line"></div>
+        </div>
+        <div class="pres-step" data-slide="4">
+          <div class="pres-step-num">05</div>
+          <div class="pres-step-line"></div>
+        </div>
+        <div class="pres-step" data-slide="5">
+          <div class="pres-step-num">06</div>
+          <div class="pres-step-line"></div>
         </div>
       </div>
 
-    </div>
-  </section>
+      <!-- Área de slides -->
+      <div class="pres-content">
+
+        <!-- ── SLIDE 01: Introducción ── -->
+        <div class="pres-slide" data-index="0" id="introduccion">
+          <div class="slide-header">
+            <div class="slide-num">01</div>
+            <h2 class="slide-title">Introducción<br>y objetivos del proyecto</h2>
+          </div>
+          <div class="slide-items">
+            <div class="slide-item">
+              <div class="item-icon">🎯</div>
+              <div class="item-body">
+                <div class="item-title">Objetivo principal</div>
+                <div class="item-desc">Visibilizar y cuantificar el flujo Checkout → StockDistribution → DeliveryPlan para priorizar acciones que reduzcan invalidaciones y pérdidas de conversión.</div>
+              </div>
+            </div>
+            <div class="slide-item">
+              <div class="item-icon">📊</div>
+              <div class="item-body">
+                <div class="item-title">Evidencia en QPR</div>
+                <div class="item-desc">Dashboards operativos disponibles en QPR Monitor / dashboard 436. KPIs de proceso definidos y monitorizables.</div>
+              </div>
+            </div>
+            <div class="slide-item">
+              <div class="item-icon">🔍</div>
+              <div class="item-body">
+                <div class="item-title">Casos reproducibles</div>
+                <div class="item-desc">Case traces operativos para debugging de Delivery/Checkout. Capturas y Grafana compartidos en el hilo para evidencia directa.</div>
+              </div>
+            </div>
+          </div>
+          <div class="slide-note">
+            <span class="note-label">Notas de ponente · 2 min</span>
+            Explicar el valor inmediato: identificar variantes de flujo (no solo métricas agregadas), seguir caseIds reales, priorizar por impacto en conversión. Referir al dashboard compacto.
+          </div>
+        </div>
+
+        <!-- ── SLIDE 02: Conceptos ── -->
+        <div class="pres-slide" data-index="1" id="conceptos">
+          <div class="slide-header">
+            <div class="slide-num">02</div>
+            <h2 class="slide-title">Conceptos básicos<br>sobre Process Mining</h2>
+          </div>
+          <div class="slide-items">
+            <div class="slide-item">
+              <div class="item-icon">📋</div>
+              <div class="item-body">
+                <div class="item-title">Event log → Cases</div>
+                <div class="item-desc">Cada transacción (case) contiene una secuencia de eventos: PurchaseAttempt CREATED → SimulateDelivery → DeliveryPlan Synced → Checkout Finalized.</div>
+              </div>
+            </div>
+            <div class="slide-item">
+              <div class="item-icon">🌿</div>
+              <div class="item-body">
+                <div class="item-title">Variant discovery</div>
+                <div class="item-desc">Agrupar secuencias similares para detectar <em>happy paths</em> y desviaciones importantes. Permite ver dónde se rompe el flujo ideal.</div>
+              </div>
+            </div>
+            <div class="slide-item">
+              <div class="item-icon">⏱️</div>
+              <div class="item-body">
+                <div class="item-title">Root-cause y timelines</div>
+                <div class="item-desc">Identificar el paso exacto donde se produce una invalidación o reintento. Medir latencias entre eventos para detectar cuellos de botella.</div>
+              </div>
+            </div>
+            <div class="slide-item">
+              <div class="item-icon">⚙️</div>
+              <div class="item-body">
+                <div class="item-title">QPR vs reporting</div>
+                <div class="item-desc">QPR para análisis (variantes/causa). Exportar KPIs simplificados a PBI / Retool si se decide monitorizar de forma continua.</div>
+              </div>
+            </div>
+          </div>
+          <div class="slide-note">
+            <span class="note-label">Notas de ponente</span>
+            Resaltar la diferencia entre análisis (QPR) y monitorización: QPR ideal para comprender variantes y diseñar reglas. Para alertas continuas, exportamos KPIs simplificados.
+          </div>
+        </div>
+
+        <!-- ── SLIDE 03: Proceso ── -->
+        <div class="pres-slide" data-index="2" id="proceso">
+          <div class="slide-header">
+            <div class="slide-num">03</div>
+            <h2 class="slide-title">Proceso<br>implementado</h2>
+          </div>
+          <div class="slide-items">
+            <div class="slide-item">
+              <div class="item-icon">🔧</div>
+              <div class="item-body">
+                <div class="item-title">ETL / minivertical</div>
+                <div class="item-desc">Minivertical creada para Checkout/Delivery/Stock con vistas temporales que alimentan QPR. Plan de migración a vertical central desde febrero para controlar costes.</div>
+              </div>
+            </div>
+            <div class="slide-item">
+              <div class="item-icon">📈</div>
+              <div class="item-body">
+                <div class="item-title">Modelado en QPR</div>
+                <div class="item-desc">Modelos semanales refrescados. Dashboards base (Monitor) y vistas de variantes / timelines disponibles desde el inicio.</div>
+              </div>
+            </div>
+            <div class="slide-item">
+              <div class="item-icon">🔗</div>
+              <div class="item-body">
+                <div class="item-title">Integración operativa</div>
+                <div class="item-desc">Uso de <code>caseId</code> para reproducir trazas. Capturas / Grafana para evidencias de problemas concretos (LARGEITEMS vs STANDARD).</div>
+              </div>
+            </div>
+          </div>
+          <div class="slide-note">
+            <span class="note-label">Notas de ponente</span>
+            Explicar flujo de datos: fuente → minivertical Checkout → vista transversal → QPR. Señalar que se acordó no cargar en vertical central hasta validar valor.
+          </div>
+        </div>
+
+        <!-- ── SLIDE 04: Lecciones ── -->
+        <div class="pres-slide" data-index="3" id="lecciones">
+          <div class="slide-header">
+            <div class="slide-num">04</div>
+            <h2 class="slide-title">Lecciones aprendidas<br>y conclusiones</h2>
+          </div>
+          <div class="slide-items">
+            <div class="slide-item">
+              <div class="item-icon">💡</div>
+              <div class="item-body">
+                <div class="item-title">Priorizar por impacto</div>
+                <div class="item-desc">La alta diversidad de variantes implica que no sirve arreglar solo la más frecuente. Medir impacto en conversión y coste — priorizar donde mayor ROI.</div>
+              </div>
+            </div>
+            <div class="slide-item">
+              <div class="item-icon">📡</div>
+              <div class="item-body">
+                <div class="item-title">Instrumentación importa</div>
+                <div class="item-desc">Campos faltantes como <code>device_os</code> dificultan segmentación. Forzar captura mejora significativamente el análisis posterior.</div>
+              </div>
+            </div>
+            <div class="slide-item">
+              <div class="item-icon">♻️</div>
+              <div class="item-body">
+                <div class="item-title">Data reproducible</div>
+                <div class="item-desc">Guardar <code>caseIds</code> y trazas facilita debugging cross-team (Delivery / Checkout). Ejemplos concretos compartidos vía Grafana + logs.</div>
+              </div>
+            </div>
+          </div>
+          <div class="slide-note">
+            <span class="note-label">Notas de ponente</span>
+            Enfatizar instrumentación (<code>device_os</code>) y conservación de <code>caseId</code> en todos los pasos. Mostrar captura Grafana que evidencia LARGEITEMS.
+          </div>
+        </div>
+
+        <!-- ── SLIDE 05: Dificultades ── -->
+        <div class="pres-slide" data-index="4" id="dificultades">
+          <div class="slide-header">
+            <div class="slide-num">05</div>
+            <h2 class="slide-title">Dificultades<br>y obstáculos</h2>
+          </div>
+          <div class="slide-items">
+            <div class="slide-item">
+              <div class="item-icon">⚠️</div>
+              <div class="item-body">
+                <div class="item-title">Inconsistencias de DeliveryPlan</div>
+                <div class="item-desc">Casos donde la simulación devuelve LARGEITEMS y nunca aparece STANDARD en la sincronía. Requiere revisión de Delivery Plan (evidencia Grafana en el hilo).</div>
+              </div>
+            </div>
+            <div class="slide-item">
+              <div class="item-icon">🔀</div>
+              <div class="item-body">
+                <div class="item-title">OPC / COD edge cases</div>
+                <div class="item-desc">Interacción entre <code>GET /payment-option</code> y <code>POST /shipping</code> genera incoherencias al editar envío. En discusión dos alternativas técnicas.</div>
+              </div>
+            </div>
+            <div class="slide-item">
+              <div class="item-icon">❌</div>
+              <div class="item-body">
+                <div class="item-title">Errores 422 / invalid shipping</div>
+                <div class="item-desc">Peticiones PUT/POST con payloads que ocasionalmente devuelven errores 422. Hay trazas y ejemplos en el hilo para reproducir.</div>
+              </div>
+            </div>
+            <div class="slide-item">
+              <div class="item-icon">💰</div>
+              <div class="item-body">
+                <div class="item-title">Coste ETLs y warehouse</div>
+                <div class="item-desc">Preocupación por impacto en costes. Acordado enfoque incremental: minivertical → migración si aporta valor demostrado.</div>
+              </div>
+            </div>
+          </div>
+          <div class="slide-note">
+            <span class="note-label">Notas de ponente</span>
+            Para cada obstáculo: llevar un caso reproducible (caseId o captura) y una propuesta de mitigación técnica y de negocio.
+          </div>
+        </div>
+
+        <!-- ── SLIDE 06: Acciones ── -->
+        <div class="pres-slide" data-index="5" id="acciones-slide">
+          <div class="slide-header">
+            <div class="slide-num">06</div>
+            <h2 class="slide-title">Acciones<br>recomendadas</h2>
+          </div>
+          <div class="actions-slide-grid">
+            <div class="action-col" style="border-color:rgba(52,199,89,0.2);background:rgba(52,199,89,0.03)">
+              <div class="action-col-label" style="color:var(--green)">⚡ Quick wins · 0–4 sem.</div>
+              <ul>
+                <li>Piloto dedup / throttling para filtrar syncs sin cambios — reduce llamadas DeliveryPlanSync innecesarias.</li>
+                <li>Hacer obligatorio <code>device_os</code> en front para mejorar segmentación.</li>
+                <li>Publicar 3 caseIds reproducibles para demo y debugging.</li>
+              </ul>
+            </div>
+            <div class="action-col" style="border-color:rgba(175,82,222,0.2);background:rgba(175,82,222,0.03)">
+              <div class="action-col-label" style="color:var(--purple)">🗓 Mediano plazo · 1–3 m.</div>
+              <ul>
+                <li>Simplificación de variantes en QPR y decisión de KPIs a exportar (% sync sin cambios; % invalid; conversión por device_channel).</li>
+                <li>Coordinar con Delivery Plan: LARGEITEMS vs STANDARD y API/contract para OPC — sprint inicia 27/03.</li>
+              </ul>
+            </div>
+            <div class="action-col" style="border-color:rgba(0,122,255,0.2);background:rgba(0,122,255,0.03)">
+              <div class="action-col-label" style="color:var(--blue)">🔭 Largo plazo · 3+ m.</div>
+              <ul>
+                <li>Evaluar migración completa a vertical central si minivertical ha demostrado valor y coste es asumible.</li>
+                <li>Diseñar alertas automáticas a PBI / Retool para monitorización continua de KPIs validados.</li>
+              </ul>
+            </div>
+          </div>
+          <div class="slide-note" style="margin-top:20px">
+            <span class="note-label">Notas de ponente</span>
+            Priorizar las acciones 0–4 semanas como decisiones de la reunión. Acordar propietarios y fechas para mediano plazo. Largo plazo como hoja de ruta sujeta a validación.
+          </div>
+        </div>
+
+        <!-- Barra de progreso -->
+        <div class="pres-progress">
+          <div class="pres-progress-fill" id="pres-progress-fill"></div>
+        </div>
+      </div><!-- /pres-content -->
+
+    </div><!-- /presentation-fixed -->
+  </div><!-- /presentation-spacer -->
 
   <!-- METODOLOGÍA -->
   <section id="metodologia">
@@ -356,101 +782,212 @@
   <script>
     gsap.registerPlugin(ScrollTrigger);
 
-    /* ── Prepara dasharray inicial ── */
+    /* ══════════════════════════════════════
+       DIANA — frame-by-frame circles
+    ══════════════════════════════════════ */
     function prepCircle(el) {
       if (!el) return 0;
       const len = 2 * Math.PI * parseFloat(el.getAttribute('r'));
       el.setAttribute('stroke-dasharray', `0 ${len}`);
       return len;
     }
-
-    /* ── Dibuja el anillo en pasos discretos (frame a frame) ── */
     const FRAMES = 36;
     function drawCircle(el, len, progress) {
-      const p     = Math.max(0, Math.min(1, progress));
-      const pStep = Math.floor(p * FRAMES) / FRAMES;
-      const drawn = len * pStep;
-      el.setAttribute('stroke-dasharray', `${drawn} ${len + 1}`);
+      const pStep = Math.floor(Math.max(0, Math.min(1, progress)) * FRAMES) / FRAMES;
+      el.setAttribute('stroke-dasharray', `${len * pStep} ${len + 1}`);
     }
 
     window.addEventListener('load', () => {
+
+      /* ── Diana ── */
       const accMig  = document.getElementById('acc-mig');
       const accProd = document.getElementById('acc-prod');
       const accProc = document.getElementById('acc-proc');
-
       const cardMig  = document.getElementById('card-mig');
       const cardProd = document.getElementById('card-prod');
       const cardProc = document.getElementById('card-proc');
-
       const phaseLabel = document.getElementById('phase-label');
-
-      const lenMig  = prepCircle(accMig);
+      const lenMig = prepCircle(accMig);
       const lenProd = prepCircle(accProd);
       const lenProc = prepCircle(accProc);
+      [accMig,accProd,accProc].forEach(el => el.style.opacity = 0);
 
-      [accMig, accProd, accProc].forEach(el => { el.style.opacity = 0; });
+      function updateDiana(p) {
+        p = Math.max(0,Math.min(1,p));
+        const p1 = Math.max(0,Math.min(1,p/0.30));
+        accMig.style.opacity = p1>0?1:0;
+        drawCircle(accMig,lenMig,p1);
+        if(p1>0.05) cardMig.classList.add('active'); else cardMig.classList.remove('active');
+        if(p<0.30) phaseLabel.textContent = p1>0.05?'Migración / Delivery':'';
 
-      /* ── Activa/desactiva tarjeta ── */
-      function setCard(card, on) {
-        if (on) card.classList.add('active');
-        else    card.classList.remove('active');
+        const p2 = Math.max(0,Math.min(1,(p-0.30)/0.35));
+        accProd.style.opacity = p2>0?1:0;
+        drawCircle(accProd,lenProd,p2);
+        if(p2>0.05) cardProd.classList.add('active'); else cardProd.classList.remove('active');
+        if(p>=0.30&&p<0.65) phaseLabel.textContent='Producto · Capacidades';
+
+        const p3 = Math.max(0,Math.min(1,(p-0.65)/0.35));
+        accProc.style.opacity = p3>0?1:0;
+        drawCircle(accProc,lenProc,p3);
+        if(p3>0.05) cardProc.classList.add('active'); else cardProc.classList.remove('active');
+        if(p>=0.65) phaseLabel.textContent='Procesos / Flows';
       }
 
-      /* ── Progreso global 0..1 ── */
-      function update(p) {
-        p = Math.max(0, Math.min(1, p));
-
-        /* Fase 1 — Migración  0 → 0.30 */
-        const p1 = Math.max(0, Math.min(1, p / 0.30));
-        accMig.style.opacity = p1 > 0 ? 1 : 0;
-        drawCircle(accMig, lenMig, p1);
-        setCard(cardMig, p1 > 0.05);
-        if (p < 0.30) phaseLabel.textContent = p1 > 0.05 ? 'Migración / Delivery' : '';
-
-        /* Fase 2 — Producto  0.30 → 0.65 */
-        const p2 = Math.max(0, Math.min(1, (p - 0.30) / 0.35));
-        accProd.style.opacity = p2 > 0 ? 1 : 0;
-        drawCircle(accProd, lenProd, p2);
-        setCard(cardProd, p2 > 0.05);
-        if (p >= 0.30 && p < 0.65) phaseLabel.textContent = 'Producto · Capacidades';
-
-        /* Fase 3 — Procesos  0.65 → 1.0 */
-        const p3 = Math.max(0, Math.min(1, (p - 0.65) / 0.35));
-        accProc.style.opacity = p3 > 0 ? 1 : 0;
-        drawCircle(accProc, lenProc, p3);
-        setCard(cardProc, p3 > 0.05);
-        if (p >= 0.65) phaseLabel.textContent = 'Procesos / Flows';
-      }
-
-      update(0);
-
+      updateDiana(0);
       ScrollTrigger.matchMedia({
-
-        "(min-width: 700px)": function () {
+        "(min-width:700px)": function() {
           ScrollTrigger.create({
-            trigger: "#diana-section",
-            start: "top top+=60",
-            end: "+=1000",
-            scrub: true,
-            pin: true,
-            anticipatePin: 1,
-            onUpdate: self => update(self.progress)
+            trigger:"#diana-section", start:"top top+=60", end:"+=1000",
+            scrub:true, pin:true, anticipatePin:1,
+            onUpdate: self => updateDiana(self.progress)
           });
           ScrollTrigger.refresh();
         },
-
-        "(max-width: 699px)": function () {
+        "(max-width:699px)": function() {
           ScrollTrigger.create({
-            trigger: "#diana-section",
-            start: "top center",
-            end: "+=500",
-            scrub: true,
-            pin: false,
-            onUpdate: self => update(self.progress)
+            trigger:"#diana-section", start:"top center", end:"+=500",
+            scrub:true, pin:false,
+            onUpdate: self => updateDiana(self.progress)
           });
         }
       });
+
+      /* ══════════════════════════════════════
+         PRESENTATION — scroll-driven slides
+      ══════════════════════════════════════ */
+      const slides    = document.querySelectorAll('.pres-slide');
+      const steps     = document.querySelectorAll('.pres-step');
+      const progressFill = document.getElementById('pres-progress-fill');
+      const TOTAL     = slides.length;  // 6
+
+      /* Estado */
+      let currentSlide = -1;
+
+      /* Muestra un slide con animación frame-stepped */
+      const ITEM_FRAMES = 12; // pasos para revelar cada ítem
+      function showSlide(idx, instant) {
+        if(idx === currentSlide && !instant) return;
+        const prev = currentSlide;
+        currentSlide = idx;
+
+        slides.forEach((s,i) => {
+          if(i === idx) {
+            s.classList.add('visible');
+          } else {
+            s.classList.remove('visible');
+            /* Resetear ítems del slide anterior */
+            s.querySelectorAll('.slide-item,.action-col,.slide-note').forEach(el => {
+              el.classList.remove('revealed');
+              el.style.opacity = '';
+              el.style.transform = '';
+            });
+          }
+        });
+
+        /* Sidebar */
+        steps.forEach((s,i) => {
+          if(i===idx) s.classList.add('active');
+          else s.classList.remove('active');
+        });
+      }
+
+      /* Revela ítems del slide activo según sub-progreso 0..1 */
+      function revealItems(slideIdx, subP) {
+        const slide = slides[slideIdx];
+        if(!slide) return;
+        const items = slide.querySelectorAll('.slide-item, .action-col');
+        const note  = slide.querySelector('.slide-note');
+        const n = items.length;
+
+        /* Cuánto del subP se dedica a los ítems vs la nota */
+        const itemsEndP = 0.85;
+        const noteP     = subP > itemsEndP ? (subP - itemsEndP) / (1 - itemsEndP) : 0;
+
+        items.forEach((item, i) => {
+          /* Cada ítem ocupa una fracción igual */
+          const start = (i / n) * itemsEndP;
+          const end   = ((i + 1) / n) * itemsEndP;
+          const p = Math.max(0, Math.min(1, (subP - start) / (end - start)));
+
+          /* Frame-stepped */
+          const pStep = Math.floor(p * ITEM_FRAMES) / ITEM_FRAMES;
+
+          if(pStep > 0) {
+            item.classList.add('revealed');
+            item.style.opacity = pStep;
+            /* translateX de -12 → 0, translateY de 16 → 0 */
+            const tx = item.classList.contains('action-col')
+              ? `translateY(${(1 - pStep) * 16}px)`
+              : `translateX(${(1 - pStep) * -12}px)`;
+            item.style.transform = tx;
+          } else {
+            item.classList.remove('revealed');
+            item.style.opacity = 0;
+            item.style.transform = item.classList.contains('action-col')
+              ? 'translateY(16px)' : 'translateX(-12px)';
+          }
+        });
+
+        /* Nota al final */
+        if(note) {
+          const noteStep = Math.floor(Math.max(0,Math.min(1,noteP)) * ITEM_FRAMES) / ITEM_FRAMES;
+          if(noteStep > 0) {
+            note.classList.add('revealed');
+            note.style.opacity = noteStep;
+          } else {
+            note.classList.remove('revealed');
+            note.style.opacity = 0;
+          }
+        }
+      }
+
+      /* ScrollTrigger para la presentación */
+      ScrollTrigger.create({
+        trigger: '#presentation-spacer',
+        start: 'top top+=60',
+        end: 'bottom bottom',
+        pin: '#presentation-fixed',
+        scrub: true,
+        anticipatePin: 1,
+        onUpdate(self) {
+          const p = self.progress;                    // 0..1 total
+          const rawSlide = p * TOTAL;                 // 0..6
+          const slideIdx = Math.min(Math.floor(rawSlide), TOTAL - 1);
+          const subP     = rawSlide - Math.floor(rawSlide); // 0..1 dentro del slide
+
+          /* Progreso barra */
+          progressFill.style.width = (p * 100) + '%';
+
+          /* Cambiar slide si toca */
+          if(slideIdx !== currentSlide) showSlide(slideIdx, false);
+
+          /* Revelar ítems según sub-progreso */
+          revealItems(slideIdx, subP);
+        }
+      });
+
+      /* Mostrar primer slide sin scroll */
+      showSlide(0, true);
+
+      /* Click en sidebar → scroll al inicio de ese slide */
+      steps.forEach((step, i) => {
+        step.addEventListener('click', () => {
+          const spacer = document.getElementById('presentation-spacer');
+          const top = spacer.offsetTop - 60;
+          const segH = spacer.offsetHeight / TOTAL;
+          window.scrollTo({ top: top + i * segH, behavior: 'smooth' });
+        });
+      });
+
+      ScrollTrigger.refresh();
     });
+
+    /* Nav scroll helper */
+    function scrollToSection(id) {
+      const el = document.getElementById(id);
+      if(!el) return;
+      window.scrollTo({ top: el.offsetTop - 60, behavior: 'smooth' });
+    }
   </script>
 </body>
 </html>
