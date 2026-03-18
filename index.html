@@ -47,8 +47,9 @@
     header{position:sticky;top:0;background:rgba(0,0,0,0.7);backdrop-filter:blur(6px);z-index:60;border-bottom:1px solid rgba(255,255,255,0.04)}
     .container{max-width:1200px;margin:0 auto;padding:18px}
 
-    .hero{min-height:84vh;display:flex;align-items:center;justify-content:center;padding-top:16px;position:relative}
-    .hero-grid{max-width:1100px;margin:0 auto;width:100%;display:flex;flex-direction:column;gap:28px;align-items:center}
+    /* HERO full-screen */
+    .hero{min-height:100vh;display:flex;align-items:center;justify-content:center;padding-top:16px;position:relative}
+    .hero-grid{max-width:1100px;margin:0 auto;width:100%;display:flex;flex-direction:column;gap:28px;align-items:center;justify-content:center;height:100%}
     .hero-title{font-size:clamp(36px,6vw,72px);font-weight:700;line-height:1.02;text-align:center}
     .hero-sub{color:var(--text-secondary);text-align:center;font-size:16px}
 
@@ -79,7 +80,6 @@
       .diana-legend{max-width:100%}
     }
 
-    /* small helper */
     .muted{color:var(--text-secondary)}
   </style>
 </head>
@@ -101,10 +101,11 @@
     </div>
   </header>
 
-  <!-- HERO con 2 folders -->
+  <!-- HERO (pantalla completa) -->
   <section class="hero" aria-label="Introducción">
     <div class="hero-grid container">
-      <!-- Folder 1: texto principal -->
+
+      <!-- Folder 1: texto principal (primer folder) -->
       <div class="folder folder-text" aria-label="Encabezado principal">
         <div class="folder-inner" style="text-align:center">
           <h1 class="hero-title font-display">Procesos reales.<br>Eventos, repeticiones y decisiones.<br>Visibilidad con QPR.</h1>
@@ -112,8 +113,8 @@
         </div>
       </div>
 
-      <!-- Folder 2: diana con scroll-driven animation -->
-      <div id="diana-section" class="folder" aria-label="Diana de enfoque">
+      <!-- Folder 2: diana con scroll-driven frame-by-frame -->
+      <div id="diana-section" class="folder" aria-label="Diana de enfoque" style="width:100%">
         <div class="folder-inner" style="display:flex;align-items:center;justify-content:center;gap:26px;flex-wrap:wrap">
           <!-- Diana card (izq) -->
           <div class="diana-card" role="img" aria-label="Diana que muestra migración en el centro, producto en medio y procesos en el exterior">
@@ -138,12 +139,12 @@
               <circle id="dot-migration" cx="160" cy="160" r="6" fill="rgba(0,122,255,0.95)" opacity="0"/>
 
               <!-- Labels: placed roughly -->
-              <text x="160" y="148" text-anchor="middle" font-size="12" font-weight="700" fill="rgba(255,255,255,0.95)">Migración</text>
-              <text x="160" y="190" text-anchor="middle" font-size="12" font-weight="700" fill="rgba(255,255,255,0.95)">Producto</text>
-              <text x="160" y="40" text-anchor="middle" font-size="12" font-weight="700" fill="rgba(255,255,255,0.95)">Procesos</text>
+              <text id="label-migration" x="160" y="148" text-anchor="middle" font-size="12" font-weight="700" fill="rgba(255,255,255,0.95)" opacity="0">Migración</text>
+              <text id="label-product" x="160" y="190" text-anchor="middle" font-size="12" font-weight="700" fill="rgba(255,255,255,0.95)" opacity="0">Producto</text>
+              <text id="label-process" x="160" y="40" text-anchor="middle" font-size="12" font-weight="700" fill="rgba(255,255,255,0.95)" opacity="0">Procesos</text>
 
-              <!-- Sub-labels -->
-              <text x="160" y="162" text-anchor="middle" font-size="11" fill="rgba(255,255,255,0.45)">Inicio: foco técnico</text>
+              <!-- Sub-label (will change during animation) -->
+              <text id="sublabel" x="160" y="162" text-anchor="middle" font-size="11" fill="rgba(255,255,255,0.45)" opacity="1">Inicio: foco técnico</text>
             </svg>
           </div>
 
@@ -183,8 +184,7 @@
     </div>
   </section>
 
-  <!-- (el resto de la página se mantiene igual: metodología, hallazgos, demo, propuestas...) -->
-  <!-- Para que puedas probar, incluyo más abajo un ejemplo mínimo de sección 'metodología' -->
+  <!-- Ejemplo de sección 'metodología' (resto de la página como antes) -->
   <section id="metodologia" style="padding:56px 18px;background:rgba(255,255,255,0.01)">
     <div class="container">
       <h2 style="font-size:22px;font-weight:700;margin-bottom:12px">Metodología</h2>
@@ -201,61 +201,110 @@
     lucide.createIcons();
     gsap.registerPlugin(ScrollTrigger);
 
-    // Helper: prepare stroke dash for a circle
+    // util: preparar stroke dash para un círculo
     function prepareStroke(el){
       const len = el.getTotalLength();
       el.style.strokeDasharray = len;
       el.style.strokeDashoffset = len;
-      // improve rendering
       el.style.vectorEffect = 'non-scaling-stroke';
       return len;
     }
 
-    // On load, prepare dash arrays
+    // animación frame-by-frame (30 frames por anillo) con matchMedia para desactivar pin en móviles
     window.addEventListener('load', () => {
       const accentMig = document.getElementById('accent-migration');
       const accentProd = document.getElementById('accent-product');
       const accentProc = document.getElementById('accent-process');
+      const dotMig = document.getElementById('dot-migration');
+      const labelMig = document.getElementById('label-migration');
+      const labelProd = document.getElementById('label-product');
+      const labelProc = document.getElementById('label-process');
+      const sublabel = document.getElementById('sublabel');
 
-      prepareStroke(accentMig);
-      prepareStroke(accentProd);
-      prepareStroke(accentProc);
+      const lenMig = prepareStroke(accentMig);
+      const lenProd = prepareStroke(accentProd);
+      const lenProc = prepareStroke(accentProc);
 
-      // Scroll-driven timeline: pin the diana area while animating center -> mid -> outer
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: "#diana-section",
-          start: "top top",
-          end: "+=800",     // length of scroll area (ajustable)
-          scrub: 0.6,
-          pin: true,
-          anticipatePin: 1
+      // SteppedEase 30 frames
+      const steps30 = gsap.SteppedEase.config(30);
+
+      // Limpieza previa
+      accentMig.style.opacity = 0;
+      accentProd.style.opacity = 0;
+      accentProc.style.opacity = 0;
+      dotMig.style.opacity = 0;
+      labelMig.style.opacity = 0;
+      labelProd.style.opacity = 0;
+      labelProc.style.opacity = 0;
+
+      // Use matchMedia: pin only on desktop (>= 768px)
+      ScrollTrigger.matchMedia({
+        // Desktop and tablet
+        "(min-width: 768px)": function() {
+          const tl = gsap.timeline({
+            scrollTrigger: {
+              trigger: "#diana-section",
+              start: "top top",
+              end: "+=900",   // longitud del scroll que controla la animación
+              scrub: true,    // sincronizado al scroll
+              pin: true,
+              anticipatePin: 1
+            }
+          });
+
+          // FRAME-BY-FRAME STEPS (30 frames por anillo)
+          // 1) Migración (centro) — frames 0..29
+          tl.to(accentMig, {opacity:1, duration:0.01}, 0);
+          tl.to(accentMig, {strokeDashoffset:0, duration:1, ease: steps30}, 0.02);
+          tl.to(dotMig, {opacity:1, scale:1, transformOrigin:"50% 50%", duration:0.15}, 0.25);
+          tl.to(labelMig, {opacity:1, duration:0.15}, 0.25);
+          tl.to(sublabel, {textContent:"Inicio: foco técnico", duration:0}, 0.25);
+
+          // 2) Producto (anillo medio) — frames 30..59
+          tl.to(accentProd, {opacity:1, duration:0.01}, 0.38);
+          tl.to(accentProd, {strokeDashoffset:0, duration:1.0, ease: steps30}, 0.4);
+          tl.to(labelProd, {opacity:1, duration:0.15}, 0.8);
+          tl.to(sublabel, {textContent:"Producto: capacidades alineadas al cliente", duration:0}, 0.8);
+
+          // 3) Procesos (exterior) — frames 60..89
+          tl.to(accentProc, {opacity:1, duration:0.01}, 1.25);
+          tl.to(accentProc, {strokeDashoffset:0, duration:1.2, ease: steps30}, 1.28);
+          tl.to(labelProc, {opacity:1, duration:0.15}, 2.2);
+          tl.to(sublabel, {textContent:"Proceso/Flows: cómo nos consumen (objetivo)", duration:0}, 2.2);
+
+          // optional small bounce at end
+          tl.to("#diana-svg", {scale:1.01, transformOrigin:"50% 50%", duration:0.6, yoyo:true, repeat:0}, 2.6);
+
+          // ensure ScrollTrigger refresh after timeline created
+          ScrollTrigger.refresh();
+        },
+
+        // Mobile: no pin, shorter animation (scrub false -> simple play)
+        "(max-width: 767px)": function() {
+          const tlm = gsap.timeline({
+            scrollTrigger: {
+              trigger: "#diana-section",
+              start: "top center",
+              end: "+=400",
+              scrub: true,
+              pin: false
+            }
+          });
+
+          tlm.to(accentMig, {opacity:1, duration:0.01}, 0);
+          tlm.to(accentMig, {strokeDashoffset:0, duration:0.6, ease: gsap.SteppedEase.config(18)}, 0.02);
+          tlm.to(dotMig, {opacity:1, scale:1, transformOrigin:"50% 50%", duration:0.12}, 0.2);
+          tlm.to(labelMig, {opacity:1, duration:0.12}, 0.2);
+
+          tlm.to(accentProd, {opacity:1, duration:0.01}, 0.5);
+          tlm.to(accentProd, {strokeDashoffset:0, duration:0.8, ease: gsap.SteppedEase.config(20)}, 0.52);
+          tlm.to(labelProd, {opacity:1, duration:0.12}, 1.1);
+
+          tlm.to(accentProc, {opacity:1, duration:0.01}, 1.15);
+          tlm.to(accentProc, {strokeDashoffset:0, duration:1.0, ease: gsap.SteppedEase.config(24)}, 1.18);
+          tlm.to(labelProc, {opacity:1, duration:0.12}, 2.1);
         }
-      });
-
-      // Step 1: highlight center migration
-      tl.to("#accent-migration", {opacity:1, duration:0.001}, 0);
-      tl.to("#accent-migration", {strokeDashoffset:0, duration:0.8, ease:"power2.out"}, 0.05);
-      tl.to("#dot-migration", {opacity:1, scale:1, transformOrigin:"50% 50%", duration:0.3, ease:"back.out(1.7)"}, 0.25);
-      // subtle pulse
-      tl.to("#dot-migration", {scale:1.25, duration:0.6, yoyo:true, repeat:1, ease:"sine.inOut"}, 0.6);
-
-      // Step 2: product ring
-      tl.to("#accent-product", {opacity:1, duration:0.001}, 1.0);
-      tl.to("#accent-product", {strokeDashoffset:0, duration:0.9, ease:"power2.out"}, 1.05);
-
-      // Step 3: outer process ring (most external)
-      tl.to("#accent-process", {opacity:1, duration:0.001}, 2.2);
-      tl.to("#accent-process", {strokeDashoffset:0, duration:1.2, ease:"power2.out"}, 2.25);
-
-      // Fade labels in as their section activates (optional)
-      // We'll animate the small sublabel (the single sublabel 'Inicio: foco técnico') to fade out and others to appear
-      tl.fromTo("#diana-svg text", {opacity:0}, {opacity:1,duration:0.4}, 0);
-    });
-
-    // Ensure redraw on resize for crisp animation
-    window.addEventListener('resize', () => {
-      // recalc strokeDasharray if needed (optional)
+      }); // matchMedia end
     });
   </script>
 </body>
