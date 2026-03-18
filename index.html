@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Process Mining 1 — Checkout · Stock · Delivery (QPR)</title>
+  <title>Process Mining — Checkout · Stock · Delivery (QPR)</title>
 
   <!-- Librerías -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -16,10 +16,8 @@
 
   <style>
     :root{
-      --header-h:64px; /* altura fija del header */
+      --header-h:64px; /* altura fija del header (ajustable) */
       --bg-primary:#000;
-      --surface:rgba(255,255,255,0.03);
-      --border:rgba(255,255,255,0.08);
       --text-primary:#fff;
       --text-secondary:rgba(255,255,255,0.6);
       --text-tertiary:rgba(255,255,255,0.4);
@@ -36,52 +34,46 @@
       -webkit-font-smoothing:antialiased;
       -moz-osx-font-smoothing:grayscale;
       line-height:1.45;
+      margin:0;
     }
     .font-display{font-family:"SF Pro Display","Inter",sans-serif}
 
-    .noise{position:fixed;inset:0;pointer-events:none;opacity:0.03;z-index:1000;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
-
     header{
-      position:sticky;top:0;height:var(--header-h);display:flex;align-items:center;
-      background:rgba(0,0,0,0.72);backdrop-filter:blur(6px);z-index:60;border-bottom:1px solid rgba(255,255,255,0.04)
+      position:sticky;
+      top:0;
+      height:var(--header-h);
+      display:flex;
+      align-items:center;
+      background:rgba(0,0,0,0.72);
+      backdrop-filter:blur(6px);
+      z-index:60;
+      border-bottom:1px solid rgba(255,255,255,0.04);
+      padding:0 18px;
     }
-    .container{max-width:1200px;margin:0 auto;padding:12px 18px}
+    .container{max-width:1200px;margin:0 auto;width:100%;}
 
-    /* HERO full-screen teniendo en cuenta header fijo */
+    /* HERO full-screen (compensando header) */
     .hero{min-height:calc(100vh - var(--header-h));display:flex;align-items:center;justify-content:center;padding:0;position:relative}
     .hero-grid{max-width:1100px;margin:0 auto;width:100%;display:flex;flex-direction:column;gap:28px;align-items:center;justify-content:center;height:100%}
     .hero-title{font-size:clamp(34px,6vw,72px);font-weight:700;line-height:1.02;text-align:center}
     .hero-sub{color:var(--text-secondary);text-align:center;font-size:16px}
 
-    /* Folders */
     .folder{width:100%;display:flex;align-items:center;justify-content:center}
     .folder-inner{max-width:980px;padding:28px;border-radius:14px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.04)}
     .folder-text h1{font-size:clamp(28px,5.5vw,48px);line-height:1.05;margin-bottom:10px}
     .folder-text p{color:var(--text-secondary);font-size:15px}
 
-    /* Diana */
-    .diana-wrap{display:flex;gap:24px;align-items:center;justify-content:center;flex-wrap:wrap}
     .diana-card{width:360px;height:360px;border-radius:18px;padding:12px;display:flex;align-items:center;justify-content:center;position:relative;border:1px solid rgba(255,255,255,0.06);background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent)}
     .diana-legend{max-width:420px}
-    .diana-legend h4{font-weight:700;font-size:18px;margin-bottom:8px}
-    .diana-legend p{color:var(--text-secondary);margin-bottom:8px}
-    .legend-item{display:flex;align-items:flex-start;gap:10px;margin-bottom:10px}
-    .legend-dot{width:12px;height:12px;border-radius:50%;margin-top:4px}
-    .legend-label{font-weight:700}
-    .legend-sub{font-size:13px;color:var(--text-tertiary)}
     .muted{color:var(--text-secondary)}
 
-    /* Responsivo */
     @media (max-width:980px){
       .diana-card{width:300px;height:300px}
-      .diana-wrap{flex-direction:column}
-      .diana-legend{max-width:100%}
+      .hero-grid{padding:18px}
     }
   </style>
 </head>
 <body>
-  <div class="noise" aria-hidden="true"></div>
-
   <header>
     <div class="container" style="display:flex;align-items:center;justify-content:space-between;">
       <div style="display:flex;align-items:center;gap:12px">
@@ -97,11 +89,11 @@
     </div>
   </header>
 
-  <!-- HERO (ocupa pantalla completa menos header) -->
-  <section class="hero" aria-label="Introducción">
+  <!-- HERO -->
+  <section class="hero" id="hero">
     <div class="hero-grid container">
 
-      <!-- Folder 1: texto principal (primer folder) -->
+      <!-- Folder 1: texto -->
       <div class="folder folder-text" aria-label="Encabezado principal">
         <div class="folder-inner" style="text-align:center">
           <h1 class="hero-title font-display">Procesos reales.<br>Eventos, repeticiones y decisiones.<br>Visibilidad con QPR.</h1>
@@ -109,47 +101,50 @@
         </div>
       </div>
 
-      <!-- Folder 2: diana con scroll-driven frame-by-frame -->
+      <!-- Folder 2: diana -->
       <div id="diana-section" class="folder" aria-label="Diana de enfoque" style="width:100%">
         <div class="folder-inner" style="display:flex;align-items:center;justify-content:center;gap:22px;flex-wrap:wrap">
-          <!-- Diana -->
-          <div class="diana-card" role="img" aria-label="Diana que muestra migración en el centro, producto en medio y procesos en el exterior">
+          <div class="diana-card" role="img" aria-label="Diana">
             <svg id="diana-svg" width="320" height="320" viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-              <defs><filter id="f0" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
-
-              <!-- Exterior: Processes -->
+              <!-- Rings -->
               <circle id="ring-process" cx="160" cy="160" r="120" stroke="rgba(255,255,255,0.06)" stroke-width="30" fill="none"/>
-              <!-- Middle: Product -->
               <circle id="ring-product" cx="160" cy="160" r="72" stroke="rgba(255,255,255,0.06)" stroke-width="34" fill="none"/>
-              <!-- Center: Migration -->
               <circle id="ring-migration" cx="160" cy="160" r="28" stroke="rgba(255,255,255,0.09)" stroke-width="56" fill="none"/>
 
-              <!-- Accent animated strokes -->
-              <circle id="accent-migration" cx="160" cy="160" r="28" stroke="rgba(0,122,255,0.95)" stroke-width="6" fill="none" stroke-linecap="round" opacity="0"/>
-              <circle id="accent-product"   cx="160" cy="160" r="72" stroke="rgba(175,82,222,0.95)" stroke-width="6" fill="none" stroke-linecap="round" opacity="0"/>
-              <circle id="accent-process"   cx="160" cy="160" r="120" stroke="rgba(52,199,89,0.95)" stroke-width="6" fill="none" stroke-linecap="round" opacity="0"/>
+              <!-- Animated accents -->
+              <circle id="accent-migration" cx="160" cy="160" r="28" stroke="#007AFF" stroke-width="6" fill="none" stroke-linecap="round" opacity="0"/>
+              <circle id="accent-product"   cx="160" cy="160" r="72" stroke="#AF52DE" stroke-width="6" fill="none" stroke-linecap="round" opacity="0"/>
+              <circle id="accent-process"   cx="160" cy="160" r="120" stroke="#34C759" stroke-width="6" fill="none" stroke-linecap="round" opacity="0"/>
 
-              <circle id="dot-migration" cx="160" cy="160" r="6" fill="rgba(0,122,255,0.95)" opacity="0"/>
+              <circle id="dot-migration" cx="160" cy="160" r="6" fill="#007AFF" opacity="0"/>
 
-              <!-- Labels (hidden until their phase) -->
-              <text id="label-migration" x="160" y="148" text-anchor="middle" font-size="12" font-weight="700" fill="rgba(255,255,255,0.95)" opacity="0">Migración</text>
-              <text id="label-product"   x="160" y="190" text-anchor="middle" font-size="12" font-weight="700" fill="rgba(255,255,255,0.95)" opacity="0">Producto</text>
-              <text id="label-process"   x="160" y="40"  text-anchor="middle" font-size="12" font-weight="700" fill="rgba(255,255,255,0.95)" opacity="0">Procesos</text>
+              <text id="label-migration" x="160" y="148" text-anchor="middle" font-size="12" font-weight="700" fill="#FFFFFF" opacity="0">Migración</text>
+              <text id="label-product"   x="160" y="190" text-anchor="middle" font-size="12" font-weight="700" fill="#FFFFFF" opacity="0">Producto</text>
+              <text id="label-process"   x="160" y="40"  text-anchor="middle" font-size="12" font-weight="700" fill="#FFFFFF" opacity="0">Procesos</text>
 
               <text id="sublabel" x="160" y="162" text-anchor="middle" font-size="11" fill="rgba(255,255,255,0.45)">Inicio: foco técnico</text>
             </svg>
           </div>
 
-          <!-- Leyenda -->
           <div class="diana-legend">
             <h4 class="font-display">Evolución del enfoque (inversa)</h4>
-            <p class="muted">Lectura invertida: centro = migración/delivery → producto (capacidades) → exterior = procesos/flows (objetivo).</p>
+            <p class="muted">Centro = Migración/Delivery → Producto (capacidades) → Exterior = Procesos/Flows.</p>
 
-            <div class="legend-item"><div class="legend-dot" style="background:var(--accent-blue)"></div><div><div class="legend-label">Migración / Delivery (centro)</div><div class="legend-sub">Estabilizar integraciones y migraciones.</div></div></div>
+            <div style="display:flex;gap:10px;align-items:flex-start;margin-top:12px">
+              <div style="width:12px;height:12px;border-radius:50%;background:#007AFF"></div>
+              <div><strong>Migración / Delivery (centro)</strong><div style="color:var(--text-tertiary)">Estabilizar integraciones y migraciones.</div></div>
+            </div>
 
-            <div class="legend-item"><div class="legend-dot" style="background:var(--accent-purple)"></div><div><div class="legend-label">Producto — Capacidades (anillo medio)</div><div class="legend-sub">Qué necesitan nuestros clientes.</div></div></div>
+            <div style="display:flex;gap:10px;align-items:flex-start;margin-top:10px">
+              <div style="width:12px;height:12px;border-radius:50%;background:#AF52DE"></div>
+              <div><strong>Producto — Capacidades (anillo medio)</strong><div style="color:var(--text-tertiary)">Qué necesitan nuestros clientes.</div></div>
+            </div>
 
-            <div class="legend-item"><div class="legend-dot" style="background:var(--accent-green)"></div><div><div class="legend-label">Procesos / Flows (exterior)</div><div class="legend-sub">Cómo nos consumen — optimización final.</div></div></div>
+            <div style="display:flex;gap:10px;align-items:flex-start;margin-top:10px">
+              <div style="width:12px;height:12px;border-radius:50%;background:#34C759"></div>
+              <div><strong>Procesos / Flows (exterior)</strong><div style="color:var(--text-tertiary)">Cómo nos consumen — optimización final.</div></div>
+            </div>
+
           </div>
         </div>
       </div>
@@ -160,7 +155,7 @@
   <section id="metodologia" style="padding:56px 18px;background:rgba(255,255,255,0.01)">
     <div class="container">
       <h2 style="font-size:22px;font-weight:700;margin-bottom:12px">Metodología</h2>
-      <p class="muted">Modelo QPR sobre intenciones de compra iniciadas con PurchaseAttempt CREATED entre 01/06/2025 y 31/08/2025 — España, Turquía, India.</p>
+      <p class="muted">Modelo QPR sobre intenciones de compra iniciadas entre 01/06/2025 y 31/08/2025 — España, Turquía, India.</p>
     </div>
   </section>
 
@@ -169,10 +164,11 @@
   </footer>
 
   <script>
-    lucide.createIcons();
+    // Inicialización
     gsap.registerPlugin(ScrollTrigger);
 
     function prepareStroke(el){
+      if(!el) return 0;
       const len = el.getTotalLength();
       el.style.strokeDasharray = len;
       el.style.strokeDashoffset = len;
@@ -190,27 +186,24 @@
       const labelProc = document.getElementById('label-process');
       const sublabel = document.getElementById('sublabel');
 
-      // preparar stroke dash
-      try {
-        prepareStroke(accentMig);
-        prepareStroke(accentProd);
-        prepareStroke(accentProc);
-      } catch(e){ /* svg no cargado */ }
+      // prepare strokes
+      prepareStroke(accentMig);
+      prepareStroke(accentProd);
+      prepareStroke(accentProc);
 
-      // limpieza inicial
+      // initial styles
       [accentMig, accentProd, accentProc].forEach(el => { if(el) el.style.opacity = 0; });
       [dotMig, labelMig, labelProd, labelProc].forEach(el => { if(el) el.style.opacity = 0; });
 
-      // 30 frames stepped ease
       const steps30 = gsap.SteppedEase.config(30);
 
-      // usar matchMedia para pin solo en >=768px
+      // Use matchMedia to avoid pinning on very small screens
       ScrollTrigger.matchMedia({
-        "(min-width: 768px)": function() {
+        "(min-width: 700px)": function() {
           const tl = gsap.timeline({
             scrollTrigger: {
               trigger: "#diana-section",
-              start: "top top+=64", // compensar header sticky de 64px
+              start: "top top+=64", // compensate header
               end: "+=900",
               scrub: true,
               pin: true,
@@ -218,33 +211,32 @@
             }
           });
 
-          // 1) Centro: Migración (frames 0..29)
+          // Centro (Migración) — frames 0..29
           tl.to(accentMig, {opacity:1, duration:0.01}, 0);
-          tl.to(accentMig, {strokeDashoffset:0, duration:1.0, ease: steps30}, 0.02);
-          tl.to(dotMig, {opacity:1, scale:1, transformOrigin:"50% 50%", duration:0.15}, 0.25);
+          tl.to(accentMig, {strokeDashoffset:0, duration:1.0, ease:steps30}, 0.02);
+          tl.to(dotMig, {opacity:1, scale:1, transformOrigin:"50% 50%", duration:0.12}, 0.25);
           tl.to(labelMig, {opacity:1, duration:0.12}, 0.25);
           tl.to(sublabel, {textContent:"Inicio: foco técnico", duration:0}, 0.25);
 
-          // 2) Medio: Producto (frames 30..59)
+          // Medio (Producto) — frames 30..59
           tl.to(accentProd, {opacity:1, duration:0.01}, 0.9);
-          tl.to(accentProd, {strokeDashoffset:0, duration:1.0, ease: steps30}, 0.92);
+          tl.to(accentProd, {strokeDashoffset:0, duration:1.0, ease:steps30}, 0.92);
           tl.to(labelProd, {opacity:1, duration:0.12}, 1.6);
           tl.to(sublabel, {textContent:"Producto: capacidades alineadas al cliente", duration:0}, 1.6);
 
-          // 3) Exterior: Procesos (frames 60..89)
+          // Exterior (Procesos) — frames 60..89
           tl.to(accentProc, {opacity:1, duration:0.01}, 2.0);
-          tl.to(accentProc, {strokeDashoffset:0, duration:1.2, ease: steps30}, 2.02);
+          tl.to(accentProc, {strokeDashoffset:0, duration:1.2, ease:steps30}, 2.02);
           tl.to(labelProc, {opacity:1, duration:0.12}, 3.1);
           tl.to(sublabel, {textContent:"Proceso/Flows: cómo nos consumen (objetivo)", duration:0}, 3.1);
 
-          // pequeño rebote final
-          tl.to("#diana-svg", {scale:1.01, transformOrigin:"50% 50%", duration:0.6, yoyo:true, repeat:0}, 3.3);
+          // small finish
+          tl.to("#diana-svg", {scale:1.01, transformOrigin:"50% 50%", duration:0.6}, 3.4);
 
           ScrollTrigger.refresh();
         },
-
-        "(max-width: 767px)": function() {
-          // móvil: no pin, animación más corta y menos frames
+        "(max-width: 699px)": function() {
+          // mobile: no pin, simpler stepping
           const tlm = gsap.timeline({
             scrollTrigger: {
               trigger: "#diana-section",
@@ -257,7 +249,7 @@
 
           tlm.to(accentMig, {opacity:1, duration:0.01}, 0);
           tlm.to(accentMig, {strokeDashoffset:0, duration:0.6, ease: gsap.SteppedEase.config(18)}, 0.02);
-          tlm.to(dotMig, {opacity:1, scale:1, transformOrigin:"50% 50%", duration:0.12}, 0.18);
+          tlm.to(dotMig, {opacity:1, scale:1, duration:0.1}, 0.18);
           tlm.to(labelMig, {opacity:1, duration:0.12}, 0.18);
           tlm.to(sublabel, {textContent:"Inicio: foco técnico", duration:0}, 0.18);
 
@@ -272,12 +264,7 @@
           tlm.to(sublabel, {textContent:"Proceso/Flows: cómo nos consumen (objetivo)", duration:0}, 2.1);
         }
       });
-    });
 
-    // recalcula longitudes al redimensionar (por si cambia DPI, etc.)
-    window.addEventListener('resize', () => {
-      // refrescar ScrollTrigger para recalcular pin/offsets
-      ScrollTrigger.refresh();
     });
   </script>
 </body>
