@@ -1,5 +1,3 @@
-<!DOCTYPE html>
-<html lang="es">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -160,7 +158,7 @@
     /* Spacer que da altura para el scroll */
     #presentation-spacer {
       /* 6 secciones × ~120vh cada una */
-      height: 720vh;
+      height: 840vh;
       position: relative;
     }
 
@@ -530,6 +528,10 @@
           <div class="pres-step-num">06</div>
           <div class="pres-step-line"></div>
         </div>
+        <div class="pres-step" data-slide="6">
+          <div class="pres-step-num">07</div>
+          <div class="pres-step-line"></div>
+        </div>
       </div>
 
       <!-- Área de slides -->
@@ -647,10 +649,66 @@
           </div>
         </div>
 
-        <!-- ── SLIDE 04: Lecciones ── -->
-        <div class="pres-slide" data-index="3" id="lecciones">
+        <!-- ── SLIDE 04: Dashboard QPR ── -->
+        <div class="pres-slide" data-index="3" id="dashboard-qpr">
           <div class="slide-header">
             <div class="slide-num">04</div>
+            <h2 class="slide-title">Construcción del dashboard<br>en QPR</h2>
+          </div>
+          <div class="slide-items">
+            <div class="slide-item">
+              <div class="item-icon">🧩</div>
+              <div class="item-body">
+                <div class="item-title">Event Types</div>
+                <div class="item-desc">Vista de frecuencia y distribución de eventos clave como Purchase Attempt, Stock Distribution y Delivery Plan. Sirve para validar cobertura del proceso e identificar las actividades dominantes.</div>
+              </div>
+            </div>
+            <div class="slide-item">
+              <div class="item-icon">⏳</div>
+              <div class="item-body">
+                <div class="item-title">Case Duration Analysis</div>
+                <div class="item-desc">Análisis de volumen de casos y porcentaje acumulado por duración. Permite detectar cuellos de botella y aislar casos con tiempos anómalos o excesivos.</div>
+              </div>
+            </div>
+            <div class="slide-item">
+              <div class="item-icon">🛤️</div>
+              <div class="item-body">
+                <div class="item-title">Top Variations</div>
+                <div class="item-desc">Identificación de los recorridos más comunes del proceso para entender el journey estándar del cliente y localizar desviaciones relevantes sobre el happy path.</div>
+              </div>
+            </div>
+            <div class="slide-item">
+              <div class="item-icon">✅</div>
+              <div class="item-body">
+                <div class="item-title">Top Variations by Result</div>
+                <div class="item-desc">Desglose de variantes exitosas y no exitosas para entender qué secuencias favorecen la conversión y cuáles concentran fallos o abandono.</div>
+              </div>
+            </div>
+            <div class="slide-item">
+              <div class="item-icon">🎯</div>
+              <div class="item-body">
+                <div class="item-title">Path from Selected Event</div>
+                <div class="item-desc">Exploración específica desde el evento <code>Stock Distribution Created false</code> para analizar rutas problemáticas, anomalías y puntos donde el flujo se desvía.</div>
+              </div>
+            </div>
+            <div class="slide-item">
+              <div class="item-icon">🔍</div>
+              <div class="item-body">
+                <div class="item-title">Insights principales</div>
+                <div class="item-desc">La mayoría de los casos siguen el flujo estándar, pero existe un volumen significativo ligado a <code>Stock Distribution Created false</code>; las duraciones largas evidencian ineficiencias y la variabilidad confirma inestabilidad del proceso.</div>
+              </div>
+            </div>
+          </div>
+          <div class="slide-note">
+            <span class="note-label">Notas de ponente</span>
+            Presentar el dashboard como una lectura en capas: cobertura de eventos, duración, variantes más frecuentes, impacto por resultado y análisis focalizado sobre eventos problemáticos para convertir hallazgos en acciones priorizadas.
+          </div>
+        </div>
+
+        <!-- ── SLIDE 05: Lecciones ── -->
+        <div class="pres-slide" data-index="4" id="lecciones">
+          <div class="slide-header">
+            <div class="slide-num">05</div>
             <h2 class="slide-title">Lecciones aprendidas<br>y conclusiones</h2>
           </div>
           <div class="slide-items">
@@ -682,10 +740,10 @@
           </div>
         </div>
 
-        <!-- ── SLIDE 05: Dificultades ── -->
-        <div class="pres-slide" data-index="4" id="dificultades">
+        <!-- ── SLIDE 06: Dificultades ── -->
+        <div class="pres-slide" data-index="5" id="dificultades">
           <div class="slide-header">
-            <div class="slide-num">05</div>
+            <div class="slide-num">06</div>
             <h2 class="slide-title">Dificultades<br>y obstáculos</h2>
           </div>
           <div class="slide-items">
@@ -724,10 +782,10 @@
           </div>
         </div>
 
-        <!-- ── SLIDE 06: Acciones ── -->
-        <div class="pres-slide" data-index="5" id="acciones-slide">
+        <!-- ── SLIDE 07: Acciones ── -->
+        <div class="pres-slide" data-index="6" id="acciones-slide">
           <div class="slide-header">
-            <div class="slide-num">06</div>
+            <div class="slide-num">07</div>
             <h2 class="slide-title">Acciones<br>recomendadas</h2>
           </div>
           <div class="actions-slide-grid">
@@ -858,7 +916,7 @@
       const slides    = document.querySelectorAll('.pres-slide');
       const steps     = document.querySelectorAll('.pres-step');
       const progressFill = document.getElementById('pres-progress-fill');
-      const TOTAL     = slides.length;  // 6
+      const TOTAL     = slides.length;  // 7
 
       /* Estado */
       let currentSlide = -1;
@@ -951,7 +1009,7 @@
         anticipatePin: 1,
         onUpdate(self) {
           const p = self.progress;                    // 0..1 total
-          const rawSlide = p * TOTAL;                 // 0..6
+          const rawSlide = p * TOTAL;                 // 0..7
           const slideIdx = Math.min(Math.floor(rawSlide), TOTAL - 1);
           const subP     = rawSlide - Math.floor(rawSlide); // 0..1 dentro del slide
 
