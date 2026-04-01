@@ -554,35 +554,17 @@
             <div class="slide-item">
               <div class="item-icon">📋</div>
               <div class="item-body">
-                <div class="item-title">Event log → Cases</div>
-                <div class="item-desc">Cada transacción (case) contiene una secuencia de eventos: PurchaseAttempt CREATED → SimulateDelivery → DeliveryPlan Synced → Checkout Finalized.</div>
+                <div class="item-title"> ¿Qué es un caso?</div>
+                <div class="item-desc"> Entendemos por caso cada transacción (case) que contiene una secuencia de eventos: PurchaseAttempt CREATED → SimulateDelivery → DeliveryPlan Synced → Checkout Finalized.</div>
               </div>
             </div>
             <div class="slide-item">
               <div class="item-icon">🌿</div>
               <div class="item-body">
-                <div class="item-title">Variant discovery</div>
-                <div class="item-desc">Agrupar secuencias similares para detectar <em>happy paths</em> y desviaciones importantes. Permite ver dónde se rompe el flujo ideal.</div>
+                <div class="item-title"> ¿Qué es una variante?</div>
+                <div class="item-desc"> Una variante está compuesta por la agrupación de casos similares para detectar <em>happy paths</em> y desviaciones importantes. Permite ver dónde se rompe el flujo ideal.</div>
               </div>
             </div>
-            <div class="slide-item">
-              <div class="item-icon">⏱️</div>
-              <div class="item-body">
-                <div class="item-title">Root-cause y timelines</div>
-                <div class="item-desc">Identificar el paso exacto donde se produce una invalidación o reintento. Medir latencias entre eventos para detectar cuellos de botella.</div>
-              </div>
-            </div>
-            <div class="slide-item">
-              <div class="item-icon">⚙️</div>
-              <div class="item-body">
-                <div class="item-title">QPR vs reporting</div>
-                <div class="item-desc">QPR para análisis (variantes/causa). Exportar KPIs simplificados a PBI / Retool si se decide monitorizar de forma continua.</div>
-              </div>
-            </div>
-          </div>
-          <div class="slide-note">
-            <span class="note-label">Notas de ponente</span>
-            Resaltar la diferencia entre análisis (QPR) y monitorización: QPR ideal para comprender variantes y diseñar reglas. Para alertas continuas, exportamos KPIs simplificados.
           </div>
         </div>
 
@@ -594,31 +576,28 @@
           </div>
           <div class="slide-items">
             <div class="slide-item">
+              <div class="item-icon">🧠</div>
+              <div class="item-body">
+                <div class="item-title">¿Qué preguntas queremos resolver? </div>
+                <div class="item-desc">¿Cuál es el tiempo promedio entre la primera solicitud de creación del delivery plan y la confirmación?</div>
+                <div class="item-desc">¿En cuántos pedidos la primera solicitud de distribución de stock y la última llamada a la creación de reserva tienen una distribución diferente?</div>
+                <div class="item-desc">¿Cuál es la secuencia más repetida de llamadas entre los diferentes servicios Core durante un checkout?</div>
+              </div>
+            </div>
+            <div class="slide-item">
               <div class="item-icon">🔧</div>
               <div class="item-body">
-                <div class="item-title">ETL / minivertical</div>
-                <div class="item-desc">Minivertical creada para Checkout/Delivery/Stock con vistas temporales que alimentan QPR. Plan de migración a vertical central desde febrero para controlar costes.</div>
+                <div class="item-title">Miniverticales -> ETL -> Vistas </div>
+                <div class="item-desc">Minivertical creada para Checkout/Delivery/Stock con vistas temporales que alimentan QPR.</div>
               </div>
             </div>
             <div class="slide-item">
               <div class="item-icon">📈</div>
               <div class="item-body">
                 <div class="item-title">Modelado en QPR</div>
-                <div class="item-desc">Modelos semanales refrescados. Dashboards base (Monitor) y vistas de variantes / timelines disponibles desde el inicio.</div>
+                <div class="item-desc">Modelos por defecto en QPR que permite tener datos disponibles desde el inicio.</div>
               </div>
             </div>
-            <div class="slide-item">
-              <div class="item-icon">🔗</div>
-              <div class="item-body">
-                <div class="item-title">Integración operativa</div>
-                <div class="item-desc">Uso de <code>caseId</code> para reproducir trazas. Capturas / Grafana para evidencias de problemas concretos (LARGEITEMS vs STANDARD).</div>
-              </div>
-            </div>
-          </div>
-          <div class="slide-note">
-            <span class="note-label">Notas de ponente</span>
-            Explicar flujo de datos: fuente → minivertical Checkout → vista transversal → QPR. Señalar que se acordó no cargar en vertical central hasta validar valor.
-          </div>
         </div>
 
         <!-- ── SLIDE 04: Dashboard QPR ── -->
@@ -663,17 +642,6 @@
                 <div class="item-desc">Exploración específica desde el evento <code>Stock Distribution Created false</code> para analizar rutas problemáticas, anomalías y puntos donde el flujo se desvía.</div>
               </div>
             </div>
-            <div class="slide-item">
-              <div class="item-icon">🔍</div>
-              <div class="item-body">
-                <div class="item-title">Insights principales</div>
-                <div class="item-desc">La mayoría de los casos siguen el flujo estándar, pero existe un volumen significativo ligado a <code>Stock Distribution Created false</code>; las duraciones largas evidencian ineficiencias y la variabilidad confirma inestabilidad del proceso.</div>
-              </div>
-            </div>
-          </div>
-          <div class="slide-note">
-            <span class="note-label">Notas de ponente</span>
-            Presentar el dashboard como una lectura en capas: cobertura de eventos, duración, variantes más frecuentes, impacto por resultado y análisis focalizado sobre eventos problemáticos para convertir hallazgos en acciones priorizadas.
           </div>
         </div>
 
@@ -687,57 +655,31 @@
             <div class="slide-item">
               <div class="item-icon">💡</div>
               <div class="item-body">
-                <div class="item-title">Priorizar por impacto</div>
-                <div class="item-desc">La alta diversidad de variantes implica que no sirve arreglar solo la más frecuente. Medir impacto en conversión y coste — priorizar donde mayor ROI.</div>
+                <div class="item-title">Tenemos un proceso poco sano</div>
+                <div class="item-desc"> El TOP-10 de variantes no cubren ni el 10% de los casos. </div>
+                <div class="item-desc">La alta diversidad de variantes implica que no sirve arreglar solo la más frecuente. Esto hace que el análisis funcional sea muy complejo y queden casos sin cubrir que se traducen en incidencias en PROD cuando activamos una nueva funcionalidad.</div>
               </div>
             </div>
             <div class="slide-item">
               <div class="item-icon">📡</div>
               <div class="item-body">
-                <div class="item-title">Instrumentación importa</div>
-                <div class="item-desc">Campos faltantes como <code>device_os</code> dificultan segmentación. Forzar captura mejora significativamente el análisis posterior.</div>
+                <div class="item-title">Mejoras necesarias en los eventos generados</div>
+                <div class="item-desc"> Checkout Core genera ahora mismo 4 eventos: creación del Purchase Attempt, seteo del Delivery, seteo del método de pago y Checkout Finalized</div>
+                <div class="item-desc"> El de seteo del método de pago deja de tener sentido con HPP. Los otros 3 son insuficientes para cubrir el funnel de venta</div>
               </div>
             </div>
             <div class="slide-item">
               <div class="item-icon">♻️</div>
               <div class="item-body">
-                <div class="item-title">Data reproducible</div>
-                <div class="item-desc">Guardar <code>caseIds</code> y trazas facilita debugging cross-team (Delivery / Checkout). Ejemplos concretos compartidos vía Grafana + logs.</div>
-              </div>
-            </div>
-          </div>
-          <div class="slide-note">
-            <span class="note-label">Notas de ponente</span>
-            Enfatizar instrumentación (<code>device_os</code>) y conservación de <code>caseId</code> en todos los pasos. Mostrar captura Grafana que evidencia LARGEITEMS.
-          </div>
-        </div>
-
-        <!-- ── SLIDE 06: Dificultades ── -->
-        <div class="pres-slide" data-index="5" id="dificultades">
-          <div class="slide-header">
-            <div class="slide-num">06</div>
-            <h2 class="slide-title">Dificultades<br>y obstáculos</h2>
-          </div>
-          <div class="slide-items">
-            <div class="slide-item">
-              <div class="item-icon">⚠️</div>
-              <div class="item-body">
-                <div class="item-title">Inconsistencias de DeliveryPlan</div>
-                <div class="item-desc">Casos donde la simulación devuelve LARGEITEMS y nunca aparece STANDARD en la sincronía. Requiere revisión de Delivery Plan (evidencia Grafana en el hilo).</div>
+                <div class="item-title">Necesidad de foco y conocimiento</div>
+                <div class="item-desc">Este tipo de análisis y herramietnas son muy potentes pero requieren de tiempo y conocimiento si se quiere sacar valor real y extraer acciones ejecutables que mejoren el proceso</div>
               </div>
             </div>
             <div class="slide-item">
-              <div class="item-icon">🔀</div>
+              <div class="item-icon">⏳</div>
               <div class="item-body">
-                <div class="item-title">OPC / COD edge cases</div>
-                <div class="item-desc">Interacción entre <code>GET /payment-option</code> y <code>POST /shipping</code> genera incoherencias al editar envío. En discusión dos alternativas técnicas.</div>
-              </div>
-            </div>
-            <div class="slide-item">
-              <div class="item-icon">❌</div>
-              <div class="item-body">
-                <div class="item-title">Errores 422 / invalid shipping</div>
-                <div class="item-desc">Peticiones PUT/POST con payloads que ocasionalmente devuelven errores 422. Hay trazas y ejemplos en el hilo para reproducir.</div>
+                <div class="item-title">Problemas de timing en el delivery del proyecto</div>
+                <div class="item-desc">Esto se planteó como un proyecto para finalizar en octubre del 2025 y conserguir insights de cara a BF. Finalmente se dilató en el tiempo, los equipos empezaron a tener otras prioridades y por ello acabó aportando menos valor del esperado</div>
               </div>
             </div>
             <div class="slide-item">
@@ -748,47 +690,8 @@
               </div>
             </div>
           </div>
-          <div class="slide-note">
-            <span class="note-label">Notas de ponente</span>
-            Para cada obstáculo: llevar un caso reproducible (caseId o captura) y una propuesta de mitigación técnica y de negocio.
-          </div>
         </div>
 
-        <!-- ── SLIDE 07: Acciones ── -->
-        <div class="pres-slide" data-index="6" id="acciones-slide">
-          <div class="slide-header">
-            <div class="slide-num">07</div>
-            <h2 class="slide-title">Acciones<br>recomendadas</h2>
-          </div>
-          <div class="actions-slide-grid">
-            <div class="action-col" style="border-color:rgba(52,199,89,0.2);background:rgba(52,199,89,0.03)">
-              <div class="action-col-label" style="color:var(--green)">⚡ Quick wins · 0–4 sem.</div>
-              <ul>
-                <li>Piloto dedup / throttling para filtrar syncs sin cambios — reduce llamadas DeliveryPlanSync innecesarias.</li>
-                <li>Hacer obligatorio <code>device_os</code> en front para mejorar segmentación.</li>
-                <li>Publicar 3 caseIds reproducibles para demo y debugging.</li>
-              </ul>
-            </div>
-            <div class="action-col" style="border-color:rgba(175,82,222,0.2);background:rgba(175,82,222,0.03)">
-              <div class="action-col-label" style="color:var(--purple)">🗓 Mediano plazo · 1–3 m.</div>
-              <ul>
-                <li>Simplificación de variantes en QPR y decisión de KPIs a exportar (% sync sin cambios; % invalid; conversión por device_channel).</li>
-                <li>Coordinar con Delivery Plan: LARGEITEMS vs STANDARD y API/contract para OPC — sprint inicia 27/03.</li>
-              </ul>
-            </div>
-            <div class="action-col" style="border-color:rgba(0,122,255,0.2);background:rgba(0,122,255,0.03)">
-              <div class="action-col-label" style="color:var(--blue)">🔭 Largo plazo · 3+ m.</div>
-              <ul>
-                <li>Evaluar migración completa a vertical central si minivertical ha demostrado valor y coste es asumible.</li>
-                <li>Diseñar alertas automáticas a PBI / Retool para monitorización continua de KPIs validados.</li>
-              </ul>
-            </div>
-          </div>
-          <div class="slide-note" style="margin-top:20px">
-            <span class="note-label">Notas de ponente</span>
-            Priorizar las acciones 0–4 semanas como decisiones de la reunión. Acordar propietarios y fechas para mediano plazo. Largo plazo como hoja de ruta sujeta a validación.
-          </div>
-        </div>
 
         <!-- Barra de progreso -->
         <div class="pres-progress">
