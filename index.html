@@ -45,7 +45,7 @@
     }
     .hdr-inner {
       max-width: 1200px; width: 100%; margin: 0 auto;
-      display: flex; align-items: center; justify-content: space-between;
+      display: flex; align-items: center; justify-content: center;
     }
     .hdr-logo {
       display: flex; align-items: center; gap: 10px;
@@ -149,7 +149,7 @@
     .phase-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
     .phase-name { font-size: 15px; font-weight: 600; letter-spacing: -.01em; }
     .phase-zone { font-size: 11px; color: var(--faint); margin-left: auto; letter-spacing: .04em; text-transform: uppercase; }
-    .phase-desc { font-size: 13px; color: var(--muted); line-height: 1.6; }
+    .phase-desc { font-size: 13px; color: var(--muted); line-height: 1.7; max-width: 420px; }
 
     /* ════════════════════════════
        PRESENTATION — scroll-driven slides
@@ -223,7 +223,7 @@
       inset: 0;
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
+      justify-content: center;
       padding: 44px 80px 44px 72px;
       opacity: 0;
       transform: translateY(40px);
@@ -389,12 +389,7 @@
         <div class="hdr-logo-mark">PM</div>
         Process Mining — QPR
       </div>
-      <nav>
-        <a onclick="scrollToSection('hero')">Resumen</a>
-        <a onclick="scrollToSection('diana-section')">Enfoque</a>
-        <a onclick="scrollToSection('presentation-spacer')">Contenido</a>
-        <a onclick="scrollToSection('acciones-slide')">Acciones</a>
-      </nav>
+      
     </div>
   </header>
 
@@ -450,7 +445,7 @@
             <span class="phase-name">Migración / Delivery</span>
             <span class="phase-zone">Centro</span>
           </div>
-          <p class="phase-desc">Estabilizar las integraciones y migraciones técnicas. Punto de partida: fiabilidad del dato antes de cualquier optimización.</p>
+          <p class="phase-desc">Priorización en migrar capacidades existentes a IOP. Estabilizar las integraciones y migraciones técnicas. Punto de partida: exposición de métricas para monitorización técnica.</p>
         </div>
         <div class="phase-card purple" id="card-prod">
           <div class="phase-card-top">
@@ -458,7 +453,7 @@
             <span class="phase-name">Producto · Capacidades</span>
             <span class="phase-zone">Anillo medio</span>
           </div>
-          <p class="phase-desc">Qué necesitan realmente los clientes. Alinear las capacidades del producto con las necesidades detectadas en los flujos de compra.</p>
+          <p class="phase-desc">Qué necesitan realmente los clientes. Alinear las capacidades del producto con las necesidades del negocio y stakeholders.</p>
         </div>
         <div class="phase-card green" id="card-proc">
           <div class="phase-card-top">
@@ -466,7 +461,7 @@
             <span class="phase-name">Procesos / Flows</span>
             <span class="phase-zone">Exterior</span>
           </div>
-          <p class="phase-desc">Cómo nos consumen. Objetivo final: visibilidad completa Checkout ↔ Stock ↔ Delivery y optimización continua.</p>
+          <p class="phase-desc">Vamos un paso más allá y nos preocupamos de cómo nos consumen. No sólo hablamos de capacidades si no que nos preocupamos de que los flujos sean lo más eficientes posibles.</p>
         </div>
       </div>
     </div>
